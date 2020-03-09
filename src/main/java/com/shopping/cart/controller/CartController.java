@@ -2,6 +2,8 @@ package com.shopping.cart.controller;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +18,14 @@ import com.shopping.cart.model.CartDto;
 import com.shopping.cart.service.CartService;
 import com.shopping.common.APIResponse;
 
+@Slf4j
+@AllArgsConstructor
 @RestController
 @RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
 
-    public CartController(CartService cartService) {this.cartService = cartService;}
 
     @GetMapping("/{user_id}")
     public ResponseEntity getCart(@PathVariable Long user_id) {

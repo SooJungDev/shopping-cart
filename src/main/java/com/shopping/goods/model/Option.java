@@ -2,7 +2,10 @@ package com.shopping.goods.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,5 +29,11 @@ public class Option {
     private String size;// 옵션 제목: 옵션명
 
     private int stock; // 재고
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name ="goods_id", nullable = false, updatable = false)
+    private Goods goods;
+
 
 }

@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+
 public class Goods {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +38,10 @@ public class Goods {
 
     private int price;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_id")
+    @OneToMany(mappedBy = "goods",cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Option> options; // 상품옵션
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "shipping_id")
+    @OneToOne(mappedBy = "goods", cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.EAGER)
     private Shipping shipping;
 
 }

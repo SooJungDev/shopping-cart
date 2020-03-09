@@ -1,6 +1,7 @@
 package com.shopping.goods.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -18,5 +19,9 @@ public class GoodsService {
 
     public List<Goods> getGoodsList() {
         return goodsRepository.findAll();
+    }
+
+    public Optional<Goods> getGoodsDetail(Long goods_id) {
+        return goodsRepository.findById(goods_id);
     }
 }
