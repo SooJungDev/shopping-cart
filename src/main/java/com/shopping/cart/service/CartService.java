@@ -1,5 +1,6 @@
 package com.shopping.cart.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.shopping.cart.model.Cart;
 import com.shopping.cart.model.CartDto;
+import com.shopping.cart.model.CartGoods;
 import com.shopping.cart.repository.CartRepository;
+import com.shopping.goods.model.Goods;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,32 @@ public class CartService {
         return cartRepository.findByUserId(id);
     }
 
+    public CartDto getCartAmountInfo(Optional<Cart> cart) {
+        Cart cartResult = cart.get();
+        List<CartGoods> goodsList = cartResult.getGoodsList();
+
+        int totalGoodsAmount = 0;
+        int totalShippingAmount = 0;
+
+        for (CartGoods goods : goodsList) {
+            int buyCount = goods.getBuyCount();
+            Goods goodsInfo = goods.getGoods();
+            int goodsPrice = goodsInfo.getPrice();
+            int shippingPrice = goodsInfo.getShipping().getPrice();
+            totalGoodsAmount += buyCount * goodsPrice;
+            totalShippingAmount += shippingPrice;
+
+        }
+
+        return CartDto.builder()
+                      .id(cartResult.getId())
+                      .goodsList(goodsList)
+                      .totalGoodsAmount(totalGoodsAmount)
+                      .totalShippingAmount(totalShippingAmount)
+                      .totalPaymentAmount(totalGoodsAmount + totalShippingAmount)
+                      .build();
+    }
+
     @Transactional(rollbackOn = Exception.class)
     public Long updateGoodsToCart(CartDto cartDto) {
         AtomicReference<Long> result = new AtomicReference<>(0L);
@@ -32,8 +61,8 @@ public class CartService {
 
         if (cart.isPresent()) {
             Cart isPresentCart = cart.get();
-            isPresentCart.getGoods_list().clear();
-            isPresentCart.getGoods_list().addAll(cartDto.getGoods_list());
+            isPresentCart.getGoodsList().clear();
+            isPresentCart.getGoodsList().addAll(cartDto.getGoodsList());
 
             Cart save = cartRepository.save(isPresentCart);
             result.set(save.getId());

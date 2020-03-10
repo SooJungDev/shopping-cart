@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,6 @@ public class CartController {
 
     private final CartService cartService;
 
-
     @GetMapping("/{user_id}")
     public ResponseEntity getCart(@PathVariable Long user_id) {
         APIResponse response = new APIResponse();
@@ -35,10 +35,11 @@ public class CartController {
         if (cart.isEmpty()) {
             response.setStatus(HttpStatus.NO_CONTENT.value());
             response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
-        } else {
-            response.setData(cart.get());
+            return ResponseEntity.ok(response);
         }
 
+        CartDto cartAmountInfo = cartService.getCartAmountInfo(cart);
+        response.setData(cartAmountInfo);
         return ResponseEntity.ok(response);
     }
 

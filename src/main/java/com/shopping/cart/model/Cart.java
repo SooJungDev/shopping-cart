@@ -38,5 +38,5 @@ public class Cart {
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval=true)
     @JoinColumn(name="cart_id")
-    private List<CartGoods> goods_list = new ArrayList<>();
+    private List<CartGoods> goodsList = new ArrayList<>();
 }

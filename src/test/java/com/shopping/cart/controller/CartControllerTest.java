@@ -3,8 +3,6 @@ package com.shopping.cart.controller;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.shopping.cart.model.Cart;
@@ -59,10 +56,10 @@ class CartControllerTest {
 
         assertAll("getCart",
                   () -> assertEquals(cartDto.getId(), cartResult.getId()),
-                  () -> assertEquals(cartDto.getGoods_list().size(), cartResult.getGoods_list().size()),
-                  () -> assertEquals(cartDto.getGoods_list().get(0), cartResult.getGoods_list().get(0)),
-                  () -> assertEquals(cartDto.getGoods_list().get(0).getSelectOption(),
-                                     cartResult.getGoods_list().get(0).getSelectOption()));
+                  () -> assertEquals(cartDto.getGoodsList().size(), cartResult.getGoodsList().size()),
+                  () -> assertEquals(cartDto.getGoodsList().get(0), cartResult.getGoodsList().get(0)),
+                  () -> assertEquals(cartDto.getGoodsList().get(0).getSelectOption(),
+                                     cartResult.getGoodsList().get(0).getSelectOption()));
 
     }
 
@@ -79,7 +76,7 @@ class CartControllerTest {
         user.setId(1L);
         cartDto.setId(1L);
         cartDto.setUser(user);
-        cartDto.setGoods_list(goodsList);
+        cartDto.setGoodsList(goodsList);
         return cartDto;
     }
 
