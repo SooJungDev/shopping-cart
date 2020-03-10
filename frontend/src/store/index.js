@@ -1,13 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import common from '@/store/modules/common'
+import goods from '@/store/modules/goods'
+import cart from '@/store/modules/cart'
 import axios from 'axios'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    common
+    common,
+    goods,
+    cart
   }
 })
 
