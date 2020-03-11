@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const url = '/cart'
+const userId = localStorage.userId
 const cart = {
   state: {
     paramCartGoodsList: [],
@@ -31,7 +32,6 @@ const cart = {
 
   actions: {
     getCartInfo ({commit}) {
-      let userId = localStorage.userId
       return axios.get(url + '/' + userId).then((response) => {
         if (response.data.status === 200) {
           commit('setParamCartGoodsList', response.data.data.goodsList)
@@ -43,7 +43,14 @@ const cart = {
         console.error(e)
       })
     },
-    updateGoodsToCart ({ commit, dispatch }, paramCart) {
+    updateGoodsToCart ({ state, commit, dispatch }, paramCartGoodsList) {
+      let paramCart = {
+        'id': state.cartInfo.id,
+        'user': {
+          'id': userId
+        },
+        'goodsList': paramCartGoodsList
+      }
       return axios.post(url, paramCart)
         .then(() => {
           dispatch('getCartInfo')

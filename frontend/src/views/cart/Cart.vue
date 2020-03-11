@@ -16,7 +16,7 @@
             <v-card-title class="headline">
               <v-checkbox  :label='cartGoods.goods.name'></v-checkbox>
               <v-spacer></v-spacer>
-              <v-icon class="mr-1">mdi-delete</v-icon>
+              <v-icon class="mr-1" @click="deleteCart(cartGoods)">mdi-delete</v-icon>
             </v-card-title>
             <v-card-subtitle>
               {{cartGoods.goods.name}}
@@ -78,13 +78,20 @@ export default {
     ...mapState({
       cartUserId: state => state.cart.cartUserId,
       cartInfo: state => state.cart.cartInfo,
-      cartGoodsList: state => state.cart.cartGoodsList
+      cartGoodsList: state => state.cart.cartGoodsList,
+      paramCartGoodsList: state => state.cart.paramCartGoodsList
     })
   },
   methods: {
     ...mapActions([
-      'getCartInfo'
-    ])
+      'getCartInfo',
+      'updateGoodsToCart'
+    ]),
+    deleteCart (cartGoods) {
+      const idx = this.paramCartGoodsList.indexOf(cartGoods)
+      this.paramCartGoodsList.splice(idx, 1)
+      this.updateGoodsToCart(this.paramCartGoodsList)
+    }
   },
   destroyed () {
 
