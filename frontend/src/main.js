@@ -15,9 +15,8 @@ export default new Vuetify({ })
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  router,
-  store,
+  render: h => h(App),
   vuetify: new Vuetify(),
-  components: { App },
-  template: '<App/>'
+  router,
+  store
 })

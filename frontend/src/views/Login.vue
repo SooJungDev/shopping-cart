@@ -4,7 +4,7 @@
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
-            <v-toolbar dark color="indigo">
+            <v-toolbar  color="#00C1A3">
               <v-toolbar-title>shopping cart</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
@@ -23,7 +23,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click="clickLogin">Login</v-btn>
+              <v-btn color="#00C1A3" @click="clickLogin">Login</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>

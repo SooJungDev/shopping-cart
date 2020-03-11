@@ -5,10 +5,12 @@ const common = {
   state: {
     sideMenuDrawer: true,
     showCommonMenu: true,
-    accessToken: null
+    accessToken: null,
+    userId: ''
   },
   getters: {
-    getAccessToken: state => state.accessToken
+    accessToken: state => state.accessToken,
+    userId: state => state.userId
   },
   mutations: {
     toggleSideMenuDrawer: (state) => {
@@ -21,19 +23,26 @@ const common = {
       state.accessToken = data
       localStorage.accessToken = data
     },
+    setUserId: (state, data) => {
+      state.userId = data
+      localStorage.userId = data
+    },
     logOut: (state) => {
       state.accessToken = null
       delete localStorage.accessToken
+      delete localStorage.userId
     }
   },
   actions: {
-    login ({ commit }, userInfo) {
+    login ({commit, dispatch, rootState}, userInfo) {
       const url = '/auth/login'
       return axios.post(url, userInfo)
         .then((response) => {
           axios.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`
           commit('setAccessToken', response.data.access_token)
           commit('setShowCommonMenu', true)
+          commit('setUserId', response.data.user_id)
+          dispatch('getCartInfo')
           router.push('/goods')
         }).catch(() => {
           alert('Login에 실패하였습니다. 다시 시도해주세요.')

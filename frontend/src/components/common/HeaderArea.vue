@@ -1,14 +1,21 @@
 <template>
   <v-app-bar
     app
-    color="indigo"
+    color="dark"
     dark
   >
     <v-app-bar-nav-icon @click.stop="toggleSideMenuDrawer" />
     <v-toolbar-title>shopping cart</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn icon>
-      <v-icon @click="cart">mdi-cart</v-icon>
+      <v-badge
+        :content="cartGoodsListSize"
+        :value="cartGoodsListSize"
+        color="#00C1A3"
+        overlap
+      >
+        <v-icon @click="cart">mdi-cart</v-icon>
+      </v-badge>
     </v-btn>
     <v-btn icon>
       <v-icon @click="logOut">mdi-logout</v-icon>
@@ -17,10 +24,15 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex'
+import {mapMutations, mapActions, mapState} from 'vuex'
 
 export default {
   name: 'HeaderArea',
+  computed: {
+    ...mapState({
+      cartGoodsListSize: state => state.cart.cartGoodsListSize
+    })
+  },
   methods: {
     ...mapActions([
       'logout'
@@ -30,7 +42,7 @@ export default {
       'setShowCommonMenu'
     ]),
     logOut () {
-      this.$router.push('/login')
+      this.$router.push('/')
       this.logout()
     },
     cart () {

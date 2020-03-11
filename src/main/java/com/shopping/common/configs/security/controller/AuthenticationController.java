@@ -67,7 +67,7 @@ public class AuthenticationController {
         int expiresIn = tokenHelper.getExpiredIn();
 
         // Return the token
-        return ResponseEntity.ok(new UserTokenState(jws, expiresIn));
+        return ResponseEntity.ok(new UserTokenState(jws, expiresIn, user.getId()));
     }
 
     @PostMapping("/refresh")

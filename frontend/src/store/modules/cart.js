@@ -1,22 +1,56 @@
-// import axios from 'axios'
+import axios from 'axios'
+
+const url = '/cart'
 const cart = {
   state: {
-    // Vue의 data
+    paramCartGoodsList: [],
+    cartGoodsList: [],
+    cartGoodsListSize: 0,
+    cartInfo: {},
+    paramCart: {}
   },
 
   getters: {
-    // Vue의 computed
-    //    : Vue의 computed와 같이 미리 연산된 값을 접근
+
   },
 
   mutations: {
-    // Vue의 method
-    //    : mutations에는 동기적은 로직만 구현. (getters와 차이점은 parameter를 넘겨줄 수 있다.)
+    setCartInfo: (state, data) => {
+      state.cartInfo = data
+    },
+    setParamCartGoodsList: (state, data) => {
+      state.paramCartGoodsList = data
+    },
+    setCartGoodsList: (state, data) => {
+      state.cartGoodsList = data
+    },
+    setCartGoodsListSize: (state, data) => {
+      state.cartGoodsListSize = data
+    }
   },
 
   actions: {
-    // Vue의 method와 같지만 actions는 async method
-    //    : actions에는 비동기 로직을 구현. (동기로직이 필요할 경우 commit으로 mutations에 구현한 함수를 호출)
+    getCartInfo ({commit}) {
+      let userId = localStorage.userId
+      return axios.get(url + '/' + userId).then((response) => {
+        if (response.data.status === 200) {
+          commit('setParamCartGoodsList', response.data.data.goodsList)
+          commit('setCartGoodsList', response.data.data.goodsList)
+          commit('setCartGoodsListSize', response.data.data.goodsList.length)
+          commit('setCartInfo', response.data.data)
+        }
+      }).catch((e) => {
+        console.error(e)
+      })
+    },
+    updateGoodsToCart ({ commit, dispatch }, paramCart) {
+      return axios.post(url, paramCart)
+        .then(() => {
+          dispatch('getCartInfo')
+        }).catch((e) => {
+          console.error(e)
+        })
+    }
   }
 }
 

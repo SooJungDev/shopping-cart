@@ -1,7 +1,7 @@
 INSERT
           INTO USERS (id, username, password, first_name, last_name, email, phone_number, enabled,
                       last_password_reset_date)
-          VALUES (1, 'user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'soojung', 'choi', 'user@example.com', '+821012345678', true, '2020-03-08 21:58:58.508-07');
+          VALUES (1, 'user', '$2a$10$WLwcnHeoqezsdoNSrqLV6.HinUcVjipzoJhNlabUY/r29nE7x/2za', 'soojung', 'choi', 'user@example.com', '+821012345678', true, '2020-03-08 21:58:58.508-07');
 
 INSERT INTO AUTHORITY (id, name)
 VALUES (1, 'ROLE_USER');
@@ -22,7 +22,7 @@ VALUES (3, 'PHP V Neck T-Shirts', 'StyleShare', 15000);
 INSERT INTO goods (GOODS_ID, name, PROVIDER, PRICE)
 VALUES (4, 'Flask Jacket', 'StyleShare', 3000);
 INSERT INTO goods (GOODS_ID, name, PROVIDER, PRICE)
-VALUES (5, 'Spring Boot Jacket"', 'StyleShare', 20000);
+VALUES (5, 'Spring Boot Jacket', 'StyleShare', 20000);
 INSERT INTO goods (GOODS_ID, name, PROVIDER, PRICE)
 VALUES (6, 'Codeigniter Jacket', 'StyleShare', 5000);
 INSERT INTO goods (GOODS_ID, name, PROVIDER, PRICE)

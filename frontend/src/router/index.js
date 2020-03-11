@@ -26,13 +26,12 @@ const router = new Router({
   routes:
     [
       {
-        path: '/',
+        path: '/goods',
         name: 'Goods',
-        component: Goods,
-        alias :'/goods'
+        component: Goods
       },
       {
-        path: '/login',
+        path: '/',
         name: 'Login',
         component: Login,
       },
@@ -40,7 +39,7 @@ const router = new Router({
         path: '/cart',
         name: 'Cart',
         component: Cart,
-        //beforeEnter: requireAuth(),
+        beforeEnter: requireAuth(),
       }
     ],
 });
