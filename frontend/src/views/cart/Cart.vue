@@ -22,9 +22,9 @@
               {{cartGoods.goods.name}}
                 색상:<span>{{cartGoods.selectOption.color}}</span>
                 /사이즈:<span>{{cartGoods.selectOption.size}}</span>
-              <span>수량 :   <v-btn small >+</v-btn>
+              <span>수량 :   <v-btn small  @click="plusGoodsStock(cartGoods)">+</v-btn>
               <span>{{cartGoods.buyCount}}</span>
-                <v-btn small>-</v-btn><br></span>
+                <v-btn small @click="minusGoodsStock(cartGoods)">-</v-btn><br></span>
             </v-card-subtitle>
 
             <v-card-text>
@@ -87,10 +87,35 @@ export default {
       'getCartInfo',
       'updateGoodsToCart'
     ]),
+    plusGoodsStock (cartGoods) {
+      ++cartGoods.buyCount
+      if (cartGoods.buyCount > cartGoods.selectOption.stock) {
+        alert('선택한 옵션의 구매 할 수 있는 개수를 초과하였습니다.\n 현재 재고수량:' + cartGoods.selectOption.stock)
+        cartGoods.buyCount = cartGoods.selectOption.stock
+        return
+      }
+      this.updateGoodsStock(this.cartGoodsList)
+    },
+    minusGoodsStock (cartGoods) {
+      --cartGoods.buyCount
+      if (cartGoods.buyCount < 1) {
+        alert('구매 수량은 최소 1개입니다.')
+        cartGoods.buyCount = 1
+        return
+      }
+
+      this.updateGoodsStock(this.cartGoodsList)
+    },
+    updateGoodsStock (cartGoodsList) {
+      this.updateGoodsToCart(cartGoodsList)
+    },
     deleteCart (cartGoods) {
       const idx = this.paramCartGoodsList.indexOf(cartGoods)
       this.paramCartGoodsList.splice(idx, 1)
       this.updateGoodsToCart(this.paramCartGoodsList)
+    },
+    deleteAll () {
+      this.updateGoodsToCart([])
     }
   },
   destroyed () {
