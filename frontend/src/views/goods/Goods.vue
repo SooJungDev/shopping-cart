@@ -32,8 +32,12 @@
               :items="goods.options"
               item-value="id"
               :item-text="item => '색상 :'+item.color +' /size :'+ item.size"
+              :item-disabled="item => item.stock ===0 ? true:false"
             ></v-select>
           </template>
+            <span>수량 :   <v-btn small  @click="plusGoodsStock(goods)">+</v-btn>
+              <span>&nbsp;{{goods.buyCount}}&nbsp; </span>
+                <v-btn small @click="minusGoodsStock(goods)">-</v-btn><br></span>
           </v-card-text>
 
           <v-card-actions>
@@ -75,6 +79,25 @@ export default {
       'getGoodsList',
       'updateGoodsToCart'
     ]),
+    plusGoodsStock (goods) {
+      if (goods.selectOption === undefined) {
+        alert('상품 옵션을 선택해 주세요.')
+        return
+      }
+
+      let option = goods.options.filter(x => x.id === goods.selectOption)
+      ++goods.buyCount
+      if (goods.buyCount > option[0].stock) {
+        alert('선택한 옵션의 구매 할 수 있는 개수를 초과하였습니다.\n 현재 재고수량:' + option[0].stock)
+        goods.buyCount = option[0].stock
+      }
+    },
+    minusGoodsStock (goods) {
+      --goods.buyCount
+      if (goods.buyCount < 1) {
+        goods.buyCount = 1
+      }
+    },
     addCart (goods) {
       if (goods.selectOption === undefined) {
         alert('상품 옵션을 선택해 주세요.')
@@ -82,7 +105,7 @@ export default {
       }
       let cartGoods = {}
       cartGoods.goods = goods
-      cartGoods.buyCount = 1
+      cartGoods.buyCount = goods.buyCount
       cartGoods.selectOption = {id: goods.selectOption}
       this.paramCartGoodsList.push(cartGoods)
       this.updateGoodsToCart(this.paramCartGoodsList)

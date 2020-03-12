@@ -17,11 +17,14 @@ const goods = {
   actions: {
     getGoodsList ({ commit }) {
       const url = '/goods'
-
       return axios.get(url, {
         params: {}
       }).then((response) => {
-        commit('setGoodsList', response.data.list)
+        let list = response.data.list
+        for (let i = 0; i < list.length; i++) {
+          list[i].buyCount = 1
+        }
+        commit('setGoodsList', list)
       }).catch((e) => {
         console.error(e)
       })
