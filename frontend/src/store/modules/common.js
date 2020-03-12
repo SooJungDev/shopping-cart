@@ -3,8 +3,8 @@ import router from '@/router/index'
 
 const common = {
   state: {
-    sideMenuDrawer: true,
-    showCommonMenu: true,
+    sideMenuDrawer: false,
+    showCommonMenu: false,
     accessToken: null,
     userId: ''
   },

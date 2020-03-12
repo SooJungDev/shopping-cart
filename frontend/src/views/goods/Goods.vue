@@ -24,18 +24,16 @@
           <v-divider class="mx-4"></v-divider>
 
           <v-card-text>
-            <span class="subheading">색상</span>
+            <span class="subheading">옵션</span>
+            <template>
             <v-select
-              :items="seletctItems"
-              label="Solo field"
-              solo
+              placeholder="옵션을 선택해 주세요"
+              v-model="goods.selectOption"
+              :items="goods.options"
+              item-value="id"
+              :item-text="item => '색상 :'+item.color +' /size :'+ item.size"
             ></v-select>
-            <span class="subheading">사이즈</span>
-            <v-select
-              :items="seletctItems"
-              label="Solo field"
-              solo
-            ></v-select>
+          </template>
           </v-card-text>
 
           <v-card-actions>
@@ -43,7 +41,7 @@
               block
               class="white--text"
               color="#00C1A3"
-              @click="addCart"
+              @click="addCart(goods)"
             >
               장바구니 담기
             </v-btn>
@@ -65,19 +63,29 @@ export default {
     this.getGoodsList()
   },
   data: () => ({
-    seletctItems: ['Foo', 'Bar', 'Fizz', 'Buzz']
   }),
   computed: {
     ...mapState({
-      goodsList: state => state.goods.goodsList
+      goodsList: state => state.goods.goodsList,
+      paramCartGoodsList: state => state.cart.paramCartGoodsList
     })
   },
   methods: {
     ...mapActions([
-      'getGoodsList'
+      'getGoodsList',
+      'updateGoodsToCart'
     ]),
-    addCart () {
-      console.log('addcart')
+    addCart (goods) {
+      if (goods.selectOption === undefined) {
+        alert('상품 옵션을 선택해 주세요.')
+        return
+      }
+      let cartGoods = {}
+      cartGoods.goods = goods
+      cartGoods.buyCount = 1
+      cartGoods.selectOption = {id: goods.selectOption}
+      this.paramCartGoodsList.push(cartGoods)
+      this.updateGoodsToCart(this.paramCartGoodsList)
     }
   },
   destroyed () {

@@ -11,7 +11,7 @@
       <v-badge
         :content="cartGoodsListSize"
         :value="cartGoodsListSize"
-        color="#00C1A3"
+        color="red"
         overlap
       >
         <v-icon @click="cart">mdi-cart</v-icon>
