@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-container fluid grid-list-xl>
+    <v-container fluid fill-height >
       <v-layout wrap justify-space-around>
-        <v-flex v-for="goods in goodsList" :key="goods.id">
-          <v-card max-width="330">
+        <v-flex v-for="goods in goodsList" :key="goods.id" style="margin-bottom:15px">
+          <v-card max-width="400" height="100%" >
           <v-card-title>
             <h1 class="display-1">{{goods.name}}</h1>
             <v-spacer></v-spacer>
@@ -40,12 +40,13 @@
                 <v-btn small @click="minusGoodsStock(goods)">-</v-btn><br></span>
           </v-card-text>
 
-          <v-card-actions>
+          <v-card-actions style="position:absolute; bottom:0px;right: 0px">
             <v-btn
               block
               class="white--text"
               color="#00C1A3"
               @click="addCart(goods)"
+
             >
               장바구니 담기
             </v-btn>
