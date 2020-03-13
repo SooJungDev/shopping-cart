@@ -21,8 +21,8 @@ const goods = {
         params: {}
       }).then((response) => {
         let list = response.data.list
-        for (let i = 0; i < list.length; i++) {
-          list[i].buyCount = 1
+        for (let goods of list) {
+          goods.buyCount = 1
         }
         commit('setGoodsList', list)
       }).catch((e) => {

@@ -34,10 +34,15 @@ const cart = {
     getCartInfo ({commit}) {
       return axios.get(url + '/' + userId).then((response) => {
         if (response.data.status === 200) {
-          commit('setParamCartGoodsList', response.data.data.goodsList)
-          commit('setCartGoodsList', response.data.data.goodsList)
-          commit('setCartGoodsListSize', response.data.data.goodsList.length)
-          commit('setCartInfo', response.data.data)
+          let cartInfo = response.data.data
+          let goodsList = cartInfo.goodsList
+          for (let goods of goodsList) {
+            goods.checked = true
+          }
+          commit('setParamCartGoodsList', goodsList)
+          commit('setCartGoodsList', goodsList)
+          commit('setCartGoodsListSize', goodsList.length)
+          commit('setCartInfo', cartInfo)
         }
       }).catch((e) => {
         console.error(e)

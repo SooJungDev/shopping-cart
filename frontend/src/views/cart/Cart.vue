@@ -1,6 +1,18 @@
 <template>
   <div>
     <v-container>
+      <v-toolbar
+        color="#00C1A3"
+        dark
+        cols="12"
+      >
+        <v-checkbox v-model="allcheck" label='전체선택' @change="changeAllcheck()"></v-checkbox>
+        <v-spacer></v-spacer>
+
+        <span> &nbsp;  </span>
+        <v-btn @click="deleteSelectCart()">삭제</v-btn>
+
+      </v-toolbar>
       <v-row align="center"
              justify="center">
         <v-col
@@ -14,7 +26,7 @@
           >
 
             <v-card-title class="headline">
-              <v-checkbox  :label='cartGoods.goods.name'></v-checkbox>
+              <v-checkbox :input-value="cartGoods.checked" v-model="cartGoods.checked" :label='cartGoods.goods.name'  @change="check(cartGoods)"></v-checkbox>
               <v-spacer></v-spacer>
               <v-icon class="mr-1" @click="deleteCart(cartGoods)">mdi-delete</v-icon>
             </v-card-title>
@@ -23,7 +35,7 @@
                 색상:<span>{{cartGoods.selectOption.color}}</span>
                 /사이즈:<span>{{cartGoods.selectOption.size}}</span>
               <span>수량 :   <v-btn small  @click="plusGoodsStock(cartGoods)">+</v-btn>
-              <span>{{cartGoods.buyCount}}</span>
+              <span>&nbsp;{{cartGoods.buyCount}}&nbsp; </span>
                 <v-btn small @click="minusGoodsStock(cartGoods)">-</v-btn><br></span>
             </v-card-subtitle>
 
@@ -69,10 +81,12 @@ export default {
   name: 'Cart',
   created () {
     this.getCartInfo(this.cartUserId)
+    this.checkedList = this.paramCartGoodsList
   },
   data: () => ({
-    name: '상품이름',
-    checkbox: true
+    allcheck: true,
+    checkedList: [],
+    uncheckedList: []
   }),
   computed: {
     ...mapState({
@@ -99,7 +113,6 @@ export default {
     minusGoodsStock (cartGoods) {
       --cartGoods.buyCount
       if (cartGoods.buyCount < 1) {
-        alert('구매 수량은 최소 1개입니다.')
         cartGoods.buyCount = 1
         return
       }
@@ -114,8 +127,58 @@ export default {
       this.paramCartGoodsList.splice(idx, 1)
       this.updateGoodsToCart(this.paramCartGoodsList)
     },
-    deleteAll () {
-      this.updateGoodsToCart([])
+    deleteSelectCart () {
+      let param = this.uncheckedList
+      if (this.checkedList.length < 1) {
+        alert('삭제 할 상품을 선택해주세요.')
+        return
+      }
+
+      if (this.allcheck) {
+        param = []
+      }
+
+      console.log(param)
+      this.updateGoodsToCart(param)
+    },
+    check (cartGoods) {
+      if (cartGoods.checked) {
+        this.checkedList.push(cartGoods)
+        const idx = this.uncheckedList.findIndex((item) => { return item.id === cartGoods.id })
+        if (idx > -1) {
+          this.uncheckedList.splice(idx, 1)
+        }
+        this.judgeAllCheck()
+        return
+      }
+
+      this.uncheckedList.push(cartGoods)
+      const idx = this.checkedList.findIndex((item) => { return item.id === cartGoods.id })
+      if (idx > -1) {
+        this.checkedList.splice(idx, 1)
+      }
+      this.judgeAllCheck()
+    },
+    changeAllcheck () {
+      for (let cartGoods of this.cartGoodsList) {
+        cartGoods.checked = this.allcheck
+      }
+
+      if (this.allcheck) {
+        this.checkedList = this.cartGoodsList
+        this.uncheckedList = []
+        return
+      }
+
+      this.checkedList = []
+      this.uncheckedList = this.cartGoodsList
+    },
+    judgeAllCheck () {
+      if (this.checkedList.length !== this.cartGoodsList.length) {
+        this.allcheck = false
+        return
+      }
+      this.allcheck = true
     }
   },
   destroyed () {
