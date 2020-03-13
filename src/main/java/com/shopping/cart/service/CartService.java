@@ -1,12 +1,13 @@
 package com.shopping.cart.service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shopping.cart.model.Cart;
 import com.shopping.cart.model.CartDto;
@@ -24,13 +25,14 @@ public class CartService {
 
     private final CartRepository cartRepository;
 
+    @Transactional(readOnly = true)
     public Optional<Cart> getCart(Long id) {
         return cartRepository.findByUserId(id);
     }
 
     public CartDto getCartAmountInfo(Optional<Cart> cart) {
         Cart cartResult = cart.get();
-        List<CartGoods> goodsList = cartResult.getGoodsList();
+        Set<CartGoods> goodsList =  cartResult.getGoodsList();
 
         int totalGoodsAmount = 0;
         int totalShippingAmount = 0;
@@ -54,7 +56,7 @@ public class CartService {
                       .build();
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public Long updateGoodsToCart(CartDto cartDto) {
         AtomicReference<Long> result = new AtomicReference<>(0L);
         Optional<Cart> cart = cartRepository.findById(cartDto.getId());

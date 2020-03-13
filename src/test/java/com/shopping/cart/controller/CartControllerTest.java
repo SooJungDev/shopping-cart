@@ -6,8 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,15 +59,15 @@ class CartControllerTest {
         assertAll("getCart",
                   () -> assertEquals(cartDto.getId(), cartResult.getId()),
                   () -> assertEquals(cartDto.getGoodsList().size(), cartResult.getGoodsList().size()),
-                  () -> assertEquals(cartDto.getGoodsList().get(0), cartResult.getGoodsList().get(0)),
-                  () -> assertEquals(cartDto.getGoodsList().get(0).getSelectOption(),
-                                     cartResult.getGoodsList().get(0).getSelectOption()));
+                  () -> assertEquals(cartDto.getGoodsList(), cartResult.getGoodsList()),
+                  () -> assertEquals(cartDto.getGoodsList().iterator().next().getSelectOption(),
+                                     cartDto.getGoodsList().iterator().next().getSelectOption()));
 
     }
 
     private CartDto getCartDto() {
         CartDto cartDto = new CartDto();
-        List<CartGoods> goodsList = new ArrayList<>();
+        LinkedHashSet<CartGoods> goodsList = new LinkedHashSet<>();
         Goods goods = Goods.builder().id(1L).name("Python Hood T-Shirts").provider("StyleShare").price(20000)
                            .build();
         Option option = Option.builder().id(1001L).color("yellow").size("S").stock(10).build();

@@ -42,6 +42,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+    properties:
+      hibernate.default_batch_fetch_size: 1000
   h2:
     console:
       enabled: true

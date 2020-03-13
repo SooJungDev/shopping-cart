@@ -1,7 +1,9 @@
 package com.shopping.cart.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -19,17 +21,17 @@ import lombok.Setter;
 public class CartDto {
     private Long id;
     private User user;
-    private List<CartGoods> goodsList = new ArrayList<>();
+    private Set<CartGoods> goodsList = new LinkedHashSet<>();
     private int totalGoodsAmount;
     private int totalShippingAmount;
     private int totalPaymentAmount;
 
     @Builder
-    public CartDto(Long id, User user, List<CartGoods> goodsList, int totalGoodsAmount, int totalShippingAmount,
+    public CartDto(Long id, User user, Set<CartGoods> goodsList, int totalGoodsAmount, int totalShippingAmount,
                    int totalPaymentAmount) {
         this.id = id;
         this.user = user;
-        this.goodsList = goodsList;
+        this.goodsList =  goodsList;
         this.totalGoodsAmount = totalGoodsAmount;
         this.totalShippingAmount = totalShippingAmount;
         this.totalPaymentAmount = totalPaymentAmount;

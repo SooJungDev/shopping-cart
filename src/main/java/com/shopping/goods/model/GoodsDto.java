@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class GoodsDto {
 
     private int price;
 
-    private List<Option> options; // 상품옵션
+    private Set<Option> options; // 상품옵션
     private Shipping shipping; // 배송 정보
 
     public Goods toEntity() {

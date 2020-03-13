@@ -1,6 +1,8 @@
 package com.shopping.goods.model;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 import com.shopping.shipping.model.Shipping;
 
@@ -38,7 +41,8 @@ public class Goods {
     private int price;
 
     @OneToMany(mappedBy = "goods",cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Option> options; // 상품옵션
+    @OrderBy("id asc")
+    private Set<Option> options = new LinkedHashSet<>();; // 상품옵션
 
     @OneToOne(mappedBy = "goods", cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.EAGER)
     private Shipping shipping;

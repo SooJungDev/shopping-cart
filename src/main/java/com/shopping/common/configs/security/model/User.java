@@ -2,7 +2,9 @@ package com.shopping.common.configs.security.model;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -55,7 +58,8 @@ public class User implements UserDetails {
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities;
+    @OrderBy("id asc")
+    private Set<Authority> authorities = new LinkedHashSet<>();
 
     public void setPassword(String password) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
