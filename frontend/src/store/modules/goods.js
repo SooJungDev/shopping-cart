@@ -26,7 +26,7 @@ const goods = {
         }
         commit('setGoodsList', list)
       }).catch((e) => {
-        console.error(e)
+        alert('잠시후에 시도해주세요.')
       })
     }
   }

@@ -36,7 +36,6 @@ const cart = {
       return axios.get(url + '/' + userId).then((response) => {
         if (response.data.status === 200) {
           let cartInfo = response.data.data
-          console.log(cartInfo)
           let goodsList = cartInfo.goodsList
           for (let goods of goodsList) {
             goods.checked = true
@@ -48,7 +47,7 @@ const cart = {
           commit('setCartPurchaseInfo', cartInfo.purchaseInfo)
         }
       }).catch((e) => {
-        console.error(e)
+        alert('잠시후에 시도해주세요.')
       })
     },
     addGoodsToCart ({state, commit, dispatch}, List) {
@@ -62,7 +61,7 @@ const cart = {
       return axios.post(url, paramCart).then(() => {
         dispatch('getCartInfo')
       }).catch((e) => {
-        console.error(e)
+        alert('잠시후에 시도해주세요.')
       })
     },
     deleteGoodsToCart ({state, commit, dispatch}, List) {
@@ -76,7 +75,7 @@ const cart = {
       return axios.delete(url, {data: paramCart}).then(() => {
         dispatch('getCartInfo')
       }).catch((e) => {
-        console.error(e)
+        alert('잠시후에 시도해주세요.')
       })
     },
     updateGoodsToCart ({state, commit, dispatch}, cartGoods) {
@@ -92,7 +91,7 @@ const cart = {
       return axios.patch(url, param).then(() => {
         dispatch('getCartInfo')
       }).catch((e) => {
-        console.error(e)
+        alert('잠시후에 시도해주세요.')
       })
     },
     getCheckGoodsPurchaseInfo ({state, commit, dispatch}, List) {
@@ -101,7 +100,7 @@ const cart = {
           commit('setCartPurchaseInfo', response.data.data)
         }
       }).catch((e) => {
-        console.error(e)
+        alert('잠시후에 시도해주세요.')
       })
     }
   }
