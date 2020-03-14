@@ -78,7 +78,7 @@ export default {
   methods: {
     ...mapActions([
       'getGoodsList',
-      'updateGoodsToCart'
+      'addGoodsToCart'
     ]),
     plusGoodsStock (goods) {
       if (goods.selectOption === undefined) {
@@ -109,7 +109,7 @@ export default {
       cartGoods.buyCount = goods.buyCount
       cartGoods.selectOption = {id: goods.selectOption}
       this.paramCartGoodsList.push(cartGoods)
-      this.updateGoodsToCart(this.paramCartGoodsList)
+      this.addGoodsToCart(this.paramCartGoodsList)
     }
   },
   destroyed () {

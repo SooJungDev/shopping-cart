@@ -99,6 +99,7 @@ export default {
   methods: {
     ...mapActions([
       'getCartInfo',
+      'deleteGoodsToCart',
       'updateGoodsToCart'
     ]),
     plusGoodsStock (cartGoods) {
@@ -108,7 +109,7 @@ export default {
         cartGoods.buyCount = cartGoods.selectOption.stock
         return
       }
-      this.updateGoodsStock(this.cartGoodsList)
+      this.updateGoodsStock(cartGoods)
     },
     minusGoodsStock (cartGoods) {
       --cartGoods.buyCount
@@ -117,42 +118,32 @@ export default {
         return
       }
 
-      this.updateGoodsStock(this.cartGoodsList)
+      this.updateGoodsStock(cartGoods)
     },
-    updateGoodsStock (cartGoodsList) {
-      this.updateGoodsToCart(cartGoodsList)
+    updateGoodsStock (cartGoods) {
+      this.updateGoodsToCart(cartGoods)
     },
     deleteCart (cartGoods) {
       const idx = this.paramCartGoodsList.indexOf(cartGoods)
       this.paramCartGoodsList.splice(idx, 1)
-      this.updateGoodsToCart(this.paramCartGoodsList)
+      this.deleteGoodsToCart(this.paramCartGoodsList)
     },
     deleteSelectCart () {
-      let param = this.uncheckedList
+      let param = this.checkedList
       if (this.checkedList.length < 1) {
         alert('삭제 할 상품을 선택해주세요.')
         return
       }
 
-      if (this.allcheck) {
-        param = []
-      }
-
-      console.log(param)
-      this.updateGoodsToCart(param)
+      this.deleteGoodsToCart(param)
     },
     check (cartGoods) {
       if (cartGoods.checked) {
         this.checkedList.push(cartGoods)
-        const idx = this.uncheckedList.findIndex((item) => { return item.id === cartGoods.id })
-        if (idx > -1) {
-          this.uncheckedList.splice(idx, 1)
-        }
         this.judgeAllCheck()
         return
       }
 
-      this.uncheckedList.push(cartGoods)
       const idx = this.checkedList.findIndex((item) => { return item.id === cartGoods.id })
       if (idx > -1) {
         this.checkedList.splice(idx, 1)
@@ -166,12 +157,10 @@ export default {
 
       if (this.allcheck) {
         this.checkedList = this.cartGoodsList
-        this.uncheckedList = []
         return
       }
 
       this.checkedList = []
-      this.uncheckedList = this.cartGoodsList
     },
     judgeAllCheck () {
       if (this.checkedList.length !== this.cartGoodsList.length) {

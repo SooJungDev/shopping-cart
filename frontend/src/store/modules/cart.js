@@ -11,9 +11,7 @@ const cart = {
     paramCart: {}
   },
 
-  getters: {
-
-  },
+  getters: {},
 
   mutations: {
     setCartInfo: (state, data) => {
@@ -48,7 +46,7 @@ const cart = {
         console.error(e)
       })
     },
-    updateGoodsToCart ({ state, commit, dispatch }, paramCartGoodsList) {
+    addGoodsToCart ({state, commit, dispatch}, paramCartGoodsList) {
       let paramCart = {
         'id': state.cartInfo.id,
         'user': {
@@ -56,12 +54,42 @@ const cart = {
         },
         'goodsList': paramCartGoodsList
       }
-      return axios.post(url, paramCart)
-        .then(() => {
-          dispatch('getCartInfo')
-        }).catch((e) => {
-          console.error(e)
-        })
+      return axios.post(url, paramCart).then(() => {
+        dispatch('getCartInfo')
+      }).catch((e) => {
+        console.error(e)
+      })
+    },
+    deleteGoodsToCart ({state, commit, dispatch}, paramCartGoodsList) {
+      let paramCart = {
+        'id': state.cartInfo.id,
+        'user': {
+          'id': userId
+        },
+        'goodsList': paramCartGoodsList
+      }
+      return axios.delete(url, {data: paramCart}).then(() => {
+        dispatch('getCartInfo')
+      }).catch((e) => {
+        console.error(e)
+      })
+    },
+    updateGoodsToCart ({state, commit, dispatch}, cartGoods) {
+      let param = {
+        'cart': {
+          'id': state.cartInfo.id
+        },
+        'id': cartGoods.id,
+        'goods': cartGoods.goods,
+        'selectOption': cartGoods.selectOption,
+        'buycount': cartGoods.buyCount
+      }
+      console.log(param)
+      return axios.patch(url, param).then(() => {
+        dispatch('getCartInfo')
+      }).catch((e) => {
+        console.error(e)
+      })
     }
   }
 }
