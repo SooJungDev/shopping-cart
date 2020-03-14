@@ -76,8 +76,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/purchase-info", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/purchase-info")
     public ResponseEntity getCheckGoodsPurchaseInfo(@RequestBody PurchaseCartGoddsDto purchaseCartGoddsDto) {
         APIResponse response = new APIResponse();
         List<CartGoodsDto> cartGoodsDtoList = purchaseCartGoddsDto.getCartGoodsList();

@@ -71,7 +71,7 @@ export default {
   }),
   computed: {
     ...mapState({
-      goodsList: state => state.goods.goodsList,
+      goodsList: state => state.goods.goodsList
     })
   },
   methods: {

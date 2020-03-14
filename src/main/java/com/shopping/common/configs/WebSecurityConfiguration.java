@@ -65,7 +65,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/goods/**").permitAll()
-                .antMatchers("/cart/**").permitAll() //TODO 나중에 닫아주기 개발을 위해서 열어둠 밑에도 닫아준다
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, jwtUserDetailService),
                                  BasicAuthenticationFilter.class);
@@ -89,6 +88,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/**/*.js"
         );
         webSecurity.ignoring().antMatchers("/js/**", "/css/**", "/images/**", "/font/**", "/message/**",
-                                           "/constant/**", "/auth/**",  "/console/**", "/cart/**");
+                                           "/constant/**", "/auth/**", "/console/**");
     }
 }
