@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +71,11 @@ public class CartController {
     @PatchMapping
     public ResponseEntity updateGoodsToCart(@RequestBody CartGoodsDto cartGoodsDto) {
         APIResponse response = new APIResponse();
-        cartService.updateGoodsToCart(cartGoodsDto);
+        Long result = cartService.updateGoodsToCart(cartGoodsDto);
+        if (result <= 0) {
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            response.setMessage(HttpStatus.NO_CONTENT.getReasonPhrase());
+        }
         return ResponseEntity.ok(response);
     }
 

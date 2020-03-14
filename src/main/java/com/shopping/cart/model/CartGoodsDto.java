@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.shopping.goods.model.Goods;
 import com.shopping.goods.model.Option;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -23,6 +24,16 @@ public class CartGoodsDto {
     private Option selectOption;
     @NonNull
     private int buyCount;
+
+    @Builder
+    public CartGoodsDto(Long id, Cart cart, @NonNull Goods goods,
+                        @NonNull Option selectOption, @NonNull int buyCount) {
+        this.id = id;
+        this.cart = cart;
+        this.goods = goods;
+        this.selectOption = selectOption;
+        this.buyCount = buyCount;
+    }
 
     public CartGoods toEntity() {
         return CartGoods.builder()

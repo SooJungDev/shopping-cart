@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +44,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(
-            @RequestBody JwtAuthenticationRequest authenticationRequest,
-            HttpServletResponse response
+            @RequestBody JwtAuthenticationRequest authenticationRequest
     ) throws AuthenticationException, IOException {
 
         // Perform the security
@@ -73,7 +71,6 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAuthenticationToken(
             HttpServletRequest request,
-            HttpServletResponse response,
             Principal principal
     ) {
 
