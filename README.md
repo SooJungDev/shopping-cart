@@ -17,12 +17,12 @@
 
 
 ## Quick Start
-Backend 실행 방법
+### Backend 실행 방법
 - 프로젝트가 설치된 곳으로 이동
 - ./mvnw install 명령어 입력
 - ./mvnw spring-boot:run 명령어 입력
 
-- Backend 실행 방법 예제
+### Backend 실행 방법 예제
 ~~~
 crystal-mac:shopping-cart crystal$ pwd
 /Users/crystal/shopping-cart
@@ -30,12 +30,12 @@ crystal-mac:shopping-cart crystal$ ./mvnw install
 crystal-mac:shopping-cart crystal$ ./mvnw spring-boot:run
 ~~~
 
-Frontend 실행 방법
+### Frontend 실행 방법
 - 프로젝트가 설치된 곳에서 frontend 폴더로 이동
 - npm install 명령어 입력
 - npm run dev 명령어 입력
 
-- Frontend 실행 방법 예제
+### Frontend 실행 방법 예제
 ~~~~
 crystal-mac:shopping-cart crystal$ cd frontend
 crystal-mac:frontend crystal$ npm install
@@ -44,7 +44,7 @@ crystal-mac:frontend crystal$ npm run dev
 
 ## API
 | Method | Path | Description | User authenticated |
-|:------:|:---------------------:|:---------------------------------------------------------------:|:------------------:|
+|--------|-----------------------|-----------------------------------------------------------------|--------------------|
 | POST | /auth/login | 가입한 아이디/패스워드를 통해 로그인 서비스를 제공합니다. | X |
 | POST | /auth/refresh | 해당 사용자의 토큰을 갱신합니다. | X |
 | POST | /auth/change-password | 해당 사용자의 패스워드를 변경합니다. | X |
