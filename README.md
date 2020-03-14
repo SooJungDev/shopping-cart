@@ -56,3 +56,10 @@ crystal-mac:frontend crystal$ npm run dev
 | POST | /cart/purchase-info | 해당 사용자의 장바구니에 체크된 상품들의 가격정보를 제공합니다. | O |
 | GET | /goods | 전체 상품 목록을 조회 합니다. | X |
 | GET | /goods/{goods_id} | 특정 상품을 조회 합니다. | X |
+
+## Demo
+- 로그인 , 상품 목록
+![demo1](https://user-images.githubusercontent.com/38197944/76683629-f5753880-6648-11ea-851e-36f7f635ea22.gif)
+
+- 장바구니
+![demo2](https://user-images.githubusercontent.com/38197944/76683654-2d7c7b80-6649-11ea-87e6-01c68630abe2.gif)
