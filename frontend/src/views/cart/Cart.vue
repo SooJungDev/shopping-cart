@@ -79,7 +79,7 @@ import {mapState, mapActions, mapMutations} from 'vuex'
 export default {
   name: 'Cart',
   created () {
-    this.getCartInfo(this.cartUserId)
+    this.getCartInfo()
     this.checkedList = this.paramCartGoodsList
   },
   data: () => ({

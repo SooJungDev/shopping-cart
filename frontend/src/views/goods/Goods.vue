@@ -72,7 +72,6 @@ export default {
   computed: {
     ...mapState({
       goodsList: state => state.goods.goodsList,
-      paramCartGoodsList: state => state.cart.paramCartGoodsList
     })
   },
   methods: {
@@ -108,8 +107,7 @@ export default {
       cartGoods.goods = goods
       cartGoods.buyCount = goods.buyCount
       cartGoods.selectOption = {id: goods.selectOption}
-      this.paramCartGoodsList.push(cartGoods)
-      this.addGoodsToCart(this.paramCartGoodsList)
+      this.addGoodsToCart([cartGoods])
     }
   },
   destroyed () {
