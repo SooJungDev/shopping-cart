@@ -14,12 +14,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonInclude(Include.NON_NULL)
 public class CartGoodsDto {
+    private Long id;
+    private Cart cart;
     private Goods goods;
     private Option selectOption;
     private int buycount;
 
     public CartGoods toEntity() {
         return CartGoods.builder()
+                        .id(id)
+                        .cart(cart)
                         .goods(goods)
                         .selectOption(selectOption)
                         .buyCount(buycount)

@@ -38,8 +38,17 @@ public class Cart {
     @JsonIgnore
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,fetch = FetchType.LAZY)
-    @JoinColumn(name="cart_id")
+    @OneToMany(mappedBy = "cart", orphanRemoval = true)
     @OrderBy("id asc")
-    private Set<CartGoods> goodsList = new LinkedHashSet<CartGoods>();
+    private Set<CartGoods> goodsList = new LinkedHashSet<>();
+
+    public void addGoods(CartGoods cartGoods) {
+        goodsList.add(cartGoods);
+        cartGoods.setCart(this);
+    }
+
+    public void removeGoods(CartGoods cartGoods) {
+        goodsList.remove(cartGoods);
+        cartGoods.setCart(null);
+    }
 }
