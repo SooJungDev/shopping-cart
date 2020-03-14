@@ -20,19 +20,14 @@ public class CartDto {
     private Long id;
     private User user;
     private Set<CartGoods> goodsList = new LinkedHashSet<>();
-    private int totalGoodsAmount;
-    private int totalShippingAmount;
-    private int totalPaymentAmount;
+    private PurchaseInfoDto purchaseInfo;
 
     @Builder
-    public CartDto(Long id, User user, Set<CartGoods> goodsList, int totalGoodsAmount, int totalShippingAmount,
-                   int totalPaymentAmount) {
+    public CartDto(Long id, User user, Set<CartGoods> goodsList, PurchaseInfoDto purchaseInfo) {
         this.id = id;
         this.user = user;
-        this.goodsList =  goodsList;
-        this.totalGoodsAmount = totalGoodsAmount;
-        this.totalShippingAmount = totalShippingAmount;
-        this.totalPaymentAmount = totalPaymentAmount;
+        this.goodsList = goodsList;
+        this.purchaseInfo = purchaseInfo;
     }
 
     public Cart toEntity() {

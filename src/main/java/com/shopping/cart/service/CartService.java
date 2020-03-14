@@ -1,5 +1,6 @@
 package com.shopping.cart.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,9 +41,7 @@ public class CartService {
         return CartDto.builder()
                       .id(cartResult.getId())
                       .goodsList(goodsList)
-                      .totalGoodsAmount(purchaseInfo.getTotalGoodsAmount())
-                      .totalShippingAmount(purchaseInfo.getTotalShippingAmount())
-                      .totalPaymentAmount(purchaseInfo.getTotalPaymentAmount())
+                      .purchaseInfo(purchaseInfo)
                       .build();
     }
 
@@ -105,6 +104,27 @@ public class CartService {
 
         }
 
+        return getPurchaseInfoDto(totalGoodsAmount, totalShippingAmount);
+    }
+
+    public PurchaseInfoDto getCheckGoodsPurchaseInfo(List<CartGoodsDto> cartGoodsDtoList) {
+        int totalGoodsAmount = 0;
+        int totalShippingAmount = 0;
+
+        for (CartGoodsDto CartGoodsDto : cartGoodsDtoList) {
+            int buyCount = CartGoodsDto.getBuyCount();
+            int goodsPrice = CartGoodsDto.getGoods().getPrice();
+            int shippingPrice = CartGoodsDto.getGoods().getShipping().getPrice();
+
+            totalGoodsAmount += buyCount * goodsPrice;
+            totalShippingAmount += shippingPrice;
+
+        }
+
+        return getPurchaseInfoDto(totalGoodsAmount, totalShippingAmount);
+    }
+
+    private PurchaseInfoDto getPurchaseInfoDto(int totalGoodsAmount, int totalShippingAmount) {
         return PurchaseInfoDto.builder().totalGoodsAmount(totalGoodsAmount).totalShippingAmount(
                 totalShippingAmount).build();
     }

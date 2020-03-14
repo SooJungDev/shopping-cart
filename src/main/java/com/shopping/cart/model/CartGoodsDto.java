@@ -7,6 +7,7 @@ import com.shopping.goods.model.Option;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -16,9 +17,12 @@ import lombok.Setter;
 public class CartGoodsDto {
     private Long id;
     private Cart cart;
+    @NonNull
     private Goods goods;
+    @NonNull
     private Option selectOption;
-    private int buycount;
+    @NonNull
+    private int buyCount;
 
     public CartGoods toEntity() {
         return CartGoods.builder()
@@ -26,7 +30,7 @@ public class CartGoodsDto {
                         .cart(cart)
                         .goods(goods)
                         .selectOption(selectOption)
-                        .buyCount(buycount)
+                        .buyCount(buyCount)
                         .build();
     }
 }

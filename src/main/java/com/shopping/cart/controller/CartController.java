@@ -1,15 +1,10 @@
 package com.shopping.cart.controller;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.cart.model.Cart;
 import com.shopping.cart.model.CartDto;
-import com.shopping.cart.model.CartGoods;
 import com.shopping.cart.model.CartGoodsDto;
+import com.shopping.cart.model.PurchaseCartGoddsDto;
 import com.shopping.cart.model.PurchaseInfoDto;
 import com.shopping.cart.service.CartService;
 import com.shopping.common.APIResponse;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
@@ -78,20 +76,16 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/purchase-info")
-    public ResponseEntity getCheckGoodsPurchaseInfo(@RequestBody List<CartGoodsDto> cartGoodsDtoList) {
+    @PostMapping(value = "/purchase-info", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getCheckGoodsPurchaseInfo(@RequestBody PurchaseCartGoddsDto purchaseCartGoddsDto) {
         APIResponse response = new APIResponse();
-
+        List<CartGoodsDto> cartGoodsDtoList = purchaseCartGoddsDto.getCartGoodsList();
         if (cartGoodsDtoList.size() < 1) {
             throw new IllegalArgumentException();
         }
 
-        Set<CartGoods> cartGoodsSet = new LinkedHashSet<>();
-        for (CartGoodsDto goods : cartGoodsDtoList) {
-            cartGoodsSet.add(goods.toEntity());
-        }
-
-        PurchaseInfoDto purchaseInfo = cartService.getPurchaseInfo(cartGoodsSet);
+        PurchaseInfoDto purchaseInfo = cartService.getCheckGoodsPurchaseInfo(cartGoodsDtoList);
         response.setData(purchaseInfo);
         return ResponseEntity.ok(response);
     }
