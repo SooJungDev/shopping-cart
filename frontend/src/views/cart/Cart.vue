@@ -60,10 +60,9 @@
             <v-card-subtitle></v-card-subtitle>
 
             <v-card-text>
-              <span>총 상품수량: <br></span>
-              <span>총 상품금액: {{cartInfo.totalGoodsAmount}} <br></span>
-              <span>총 배송비:{{cartInfo.totalShippingAmount}} <br></span>
-              <span>총 결제금액:{{cartInfo.totalPaymentAmount}} <br></span>
+              <span>총 상품금액: {{cartPurchaseInfo.totalGoodsAmount}} <br></span>
+              <span>총 배송비:{{cartPurchaseInfo.totalShippingAmount}} <br></span>
+              <span>총 결제금액:{{cartPurchaseInfo.totalPaymentAmount}} <br></span>
             </v-card-text>
             <v-card-text>
               <v-btn  color="#00C1A3">결제하기</v-btn>
@@ -75,7 +74,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import {mapState, mapActions, mapMutations} from 'vuex'
 
 export default {
   name: 'Cart',
@@ -92,15 +91,20 @@ export default {
     ...mapState({
       cartUserId: state => state.cart.cartUserId,
       cartInfo: state => state.cart.cartInfo,
+      cartPurchaseInfo: state => state.cart.cartPurchaseInfo,
       cartGoodsList: state => state.cart.cartGoodsList,
       paramCartGoodsList: state => state.cart.paramCartGoodsList
     })
   },
   methods: {
+    ...mapMutations([
+      'setCartPurchaseInfo'
+    ]),
     ...mapActions([
       'getCartInfo',
       'deleteGoodsToCart',
-      'updateGoodsToCart'
+      'updateGoodsToCart',
+      'getCheckGoodsPurchaseInfo'
     ]),
     plusGoodsStock (cartGoods) {
       ++cartGoods.buyCount
@@ -124,9 +128,7 @@ export default {
       this.updateGoodsToCart(cartGoods)
     },
     deleteCart (cartGoods) {
-      const idx = this.paramCartGoodsList.indexOf(cartGoods)
-      this.paramCartGoodsList.splice(idx, 1)
-      this.deleteGoodsToCart(this.paramCartGoodsList)
+      this.deleteGoodsToCart([cartGoods])
     },
     deleteSelectCart () {
       let param = this.checkedList
@@ -141,6 +143,7 @@ export default {
       if (cartGoods.checked) {
         this.checkedList.push(cartGoods)
         this.judgeAllCheck()
+        this.getCheckGoodsPurchaseInfo(this.checkedList)
         return
       }
 
@@ -148,7 +151,13 @@ export default {
       if (idx > -1) {
         this.checkedList.splice(idx, 1)
       }
+
       this.judgeAllCheck()
+      if (this.checkedList.length > 0) {
+        this.getCheckGoodsPurchaseInfo(this.checkedList)
+        return
+      }
+      this.setCartPurchaseInfo({totalGoodsAmount: 0, totalShippingAmount: 0, totalPaymentAmount: 0})
     },
     changeAllcheck () {
       for (let cartGoods of this.cartGoodsList) {
@@ -157,10 +166,12 @@ export default {
 
       if (this.allcheck) {
         this.checkedList = this.cartGoodsList
+        this.getCheckGoodsPurchaseInfo(this.checkedList)
         return
       }
 
       this.checkedList = []
+      this.setCartPurchaseInfo({totalGoodsAmount: 0, totalShippingAmount: 0, totalPaymentAmount: 0})
     },
     judgeAllCheck () {
       if (this.checkedList.length !== this.cartGoodsList.length) {

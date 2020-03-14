@@ -8,7 +8,7 @@ const cart = {
     cartGoodsList: [],
     cartGoodsListSize: 0,
     cartInfo: {},
-    paramCart: {}
+    cartPurchaseInfo: {}
   },
 
   getters: {},
@@ -25,6 +25,9 @@ const cart = {
     },
     setCartGoodsListSize: (state, data) => {
       state.cartGoodsListSize = data
+    },
+    setCartPurchaseInfo: (state, data) => {
+      state.cartPurchaseInfo = data
     }
   },
 
@@ -33,6 +36,7 @@ const cart = {
       return axios.get(url + '/' + userId).then((response) => {
         if (response.data.status === 200) {
           let cartInfo = response.data.data
+          console.log(cartInfo)
           let goodsList = cartInfo.goodsList
           for (let goods of goodsList) {
             goods.checked = true
@@ -41,18 +45,19 @@ const cart = {
           commit('setCartGoodsList', goodsList)
           commit('setCartGoodsListSize', goodsList.length)
           commit('setCartInfo', cartInfo)
+          commit('setCartPurchaseInfo', cartInfo.purchaseInfo)
         }
       }).catch((e) => {
         console.error(e)
       })
     },
-    addGoodsToCart ({state, commit, dispatch}, paramCartGoodsList) {
+    addGoodsToCart ({state, commit, dispatch}, List) {
       let paramCart = {
         'id': state.cartInfo.id,
         'user': {
           'id': userId
         },
-        'goodsList': paramCartGoodsList
+        'goodsList': List
       }
       return axios.post(url, paramCart).then(() => {
         dispatch('getCartInfo')
@@ -60,13 +65,13 @@ const cart = {
         console.error(e)
       })
     },
-    deleteGoodsToCart ({state, commit, dispatch}, paramCartGoodsList) {
+    deleteGoodsToCart ({state, commit, dispatch}, List) {
       let paramCart = {
         'id': state.cartInfo.id,
         'user': {
           'id': userId
         },
-        'goodsList': paramCartGoodsList
+        'goodsList': List
       }
       return axios.delete(url, {data: paramCart}).then(() => {
         dispatch('getCartInfo')
@@ -82,11 +87,19 @@ const cart = {
         'id': cartGoods.id,
         'goods': cartGoods.goods,
         'selectOption': cartGoods.selectOption,
-        'buycount': cartGoods.buyCount
+        'buyCount': cartGoods.buyCount
       }
-      console.log(param)
       return axios.patch(url, param).then(() => {
         dispatch('getCartInfo')
+      }).catch((e) => {
+        console.error(e)
+      })
+    },
+    getCheckGoodsPurchaseInfo ({state, commit, dispatch}, List) {
+      return axios.post(url + '/purchase-info', {'cartGoodsList': List}).then((response) => {
+        if (response.data.status === 200) {
+          commit('setCartPurchaseInfo', response.data.data)
+        }
       }).catch((e) => {
         console.error(e)
       })
