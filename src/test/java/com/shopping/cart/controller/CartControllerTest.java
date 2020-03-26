@@ -2,7 +2,6 @@ package com.shopping.cart.controller;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,7 +11,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -95,13 +93,13 @@ class CartControllerTest {
     void getCheckGoodsPurchaseInfo() {
         CartGoodsDto cartGoodsDto = getCartGoodsDto();
 
-        PurchaseInfoDto checkGoodsPurchaseInfo = cartService.getCheckGoodsPurchaseInfo(List.of(cartGoodsDto));
+        PurchaseInfoDto checkGoodsPurchaseInfo = cartService.getGoodsPurchaseInfo(List.of(cartGoodsDto));
         int goodsAmount = cartGoodsDto.getGoods().getPrice() * cartGoodsDto.getBuyCount();
         int shippingAmount = cartGoodsDto.getGoods().getShipping().getPrice();
         int total = goodsAmount + shippingAmount;
         assertAll("getCheckGoodsPurchaseInfo",
                   () -> assertEquals(checkGoodsPurchaseInfo.getTotalGoodsAmount(), goodsAmount),
-                  () -> assertEquals(checkGoodsPurchaseInfo.getTotalShippingAmount(),shippingAmount ),
+                  () -> assertEquals(checkGoodsPurchaseInfo.getTotalShippingAmount(), shippingAmount),
                   () -> assertEquals(checkGoodsPurchaseInfo.getTotalPaymentAmount(), total)
         );
 
@@ -129,7 +127,7 @@ class CartControllerTest {
 
     private Goods getGoods() {
         return Goods.builder().id(1L).name("Python Hood T-Shirts").provider("StyleShare").price(20000)
-                    .shipping(Shipping.builder().price(2000).build())
+                    .shipping(Shipping.builder().price(2000).method("PREPAY").build())
                     .build();
     }
 

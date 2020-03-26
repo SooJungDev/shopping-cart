@@ -20,7 +20,6 @@ import com.shopping.cart.model.CartGoodsDto;
 import com.shopping.cart.model.PurchaseInfoDto;
 import com.shopping.cart.repository.CartGoodRepository;
 import com.shopping.cart.repository.CartRepository;
-import com.shopping.goods.model.Goods;
 import com.shopping.shipping.model.Shipping;
 
 import lombok.AllArgsConstructor;
