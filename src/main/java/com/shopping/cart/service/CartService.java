@@ -1,8 +1,13 @@
 package com.shopping.cart.service;
 
+import static java.util.stream.Collectors.groupingBy;
+
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +20,7 @@ import com.shopping.cart.model.PurchaseInfoDto;
 import com.shopping.cart.repository.CartGoodRepository;
 import com.shopping.cart.repository.CartRepository;
 import com.shopping.goods.model.Goods;
+import com.shopping.shipping.model.Shipping;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Service
 public class CartService {
+
+    private final static String PREPAY = "PREPAY";
 
     private final CartRepository cartRepository;
     private final CartGoodRepository cartGoodRepository;
@@ -108,20 +116,76 @@ public class CartService {
     }
 
     public PurchaseInfoDto getCheckGoodsPurchaseInfo(List<CartGoodsDto> cartGoodsDtoList) {
-        int totalGoodsAmount = 0;
+        int totalGoodsAmount = getTotalGoodsAmount(cartGoodsDtoList);
+        int totalShippingAmount = getTotalShippingAmount(cartGoodsDtoList);
+
+        return getPurchaseInfoDto(totalGoodsAmount, totalShippingAmount);
+    }
+
+    private int getTotalShippingAmount(List<CartGoodsDto> cartGoodsDtoList) {
         int totalShippingAmount = 0;
+        Map<String, List<CartGoodsDto>> cartGoodsByProvider = cartGoodsByProvider(cartGoodsDtoList);
 
-        for (CartGoodsDto CartGoodsDto : cartGoodsDtoList) {
-            int buyCount = CartGoodsDto.getBuyCount();
-            int goodsPrice = CartGoodsDto.getGoods().getPrice();
-            int shippingPrice = CartGoodsDto.getGoods().getShipping().getPrice();
-
-            totalGoodsAmount += buyCount * goodsPrice;
-            totalShippingAmount += shippingPrice;
+        for (String provider : cartGoodsByProvider.keySet()) {
+            List<CartGoodsDto> cartGoodsList = cartGoodsByProvider.get(provider);
+            List<Shipping> prepayShippings = findPrepayShippings(cartGoodsList);
+            totalShippingAmount = plusMinPriceIsBundle(totalShippingAmount, prepayShippings);
+            totalShippingAmount = plusIsNotBundle(totalShippingAmount, prepayShippings);
 
         }
 
-        return getPurchaseInfoDto(totalGoodsAmount, totalShippingAmount);
+        return totalShippingAmount;
+    }
+
+    private int plusMinPriceIsBundle(int totalShippingAmount, List<Shipping> prepayShippings) {
+        Shipping shipping = getMinPriceByBundle(prepayShippings);
+        if (shipping != null) {
+            totalShippingAmount += shipping.getPrice();
+        }
+        return totalShippingAmount;
+    }
+
+    private int plusIsNotBundle(int totalShippingAmount, List<Shipping> prepayShippings) {
+        for (Shipping prepayShipping : prepayShippings) {
+            if (!prepayShipping.isCanBundle()) {
+                totalShippingAmount += prepayShipping.getPrice();
+            }
+        }
+        return totalShippingAmount;
+    }
+
+    private Shipping getMinPriceByBundle(List<Shipping> prepayShippings) {
+        return prepayShippings.stream()
+                              .min(Comparator.comparing(Shipping::getPrice))
+                              .filter(Shipping::isCanBundle)
+                              .orElseGet(null);
+    }
+
+    private List<Shipping> findPrepayShippings(List<CartGoodsDto> cartGoodsList) {
+        return cartGoodsList.stream()
+                            .filter(cartGoodsDto -> PREPAY.equals(cartGoodsDto
+                                                                          .getGoods()
+                                                                          .getShipping()
+                                                                          .getMethod()))
+                            .map(CartGoodsDto::getGoods).map(goods -> goods.getShipping())
+                            .collect(Collectors.toList());
+    }
+
+    private Map<String, List<CartGoodsDto>> cartGoodsByProvider(List<CartGoodsDto> cartGoodsDtoList) {
+        return cartGoodsDtoList.stream()
+                               .collect(groupingBy(
+                                       cartGoodsDto -> cartGoodsDto
+                                               .getGoods().getProvider()));
+    }
+
+    private int getTotalGoodsAmount(List<CartGoodsDto> cartGoodsDtoList) {
+        int totalGoodsAmount = 0;
+        for (CartGoodsDto CartGoodsDto : cartGoodsDtoList) {
+            int buyCount = CartGoodsDto.getBuyCount();
+            int goodsPrice = CartGoodsDto.getGoods().getPrice();
+            totalGoodsAmount += buyCount * goodsPrice;
+        }
+        return totalGoodsAmount;
     }
 
     private PurchaseInfoDto getPurchaseInfoDto(int totalGoodsAmount, int totalShippingAmount) {
