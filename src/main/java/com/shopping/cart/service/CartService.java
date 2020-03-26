@@ -2,6 +2,7 @@ package com.shopping.cart.service;
 
 import static java.util.stream.Collectors.groupingBy;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -43,14 +44,26 @@ public class CartService {
     public CartDto getCartAmountInfo(Optional<Cart> cart) {
         Cart cartResult = cart.get();
         Set<CartGoods> goodsList = cartResult.getGoodsList();
-
-        PurchaseInfoDto purchaseInfo = getPurchaseInfo(goodsList);
+        List<CartGoodsDto> CartGoodsDtos = getCartGoodsDtos(goodsList);
+        PurchaseInfoDto purchaseInfo = getGoodsPurchaseInfo(CartGoodsDtos);
 
         return CartDto.builder()
                       .id(cartResult.getId())
                       .goodsList(goodsList)
                       .purchaseInfo(purchaseInfo)
                       .build();
+    }
+
+    private List<CartGoodsDto> getCartGoodsDtos(Set<CartGoods> goodsList) {
+        List<CartGoodsDto> CartGoodsDtos = new ArrayList<>();
+        for (CartGoods cartGoods : goodsList) {
+            CartGoodsDtos.add(CartGoodsDto.builder()
+                                          .buyCount(cartGoods.getBuyCount())
+                                          .selectOption(cartGoods.getSelectOption())
+                                          .goods(cartGoods.getGoods())
+                                          .build());
+        }
+        return CartGoodsDtos;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -98,24 +111,7 @@ public class CartService {
 
     }
 
-    public PurchaseInfoDto getPurchaseInfo(Set<CartGoods> goodsList) {
-        int totalGoodsAmount = 0;
-        int totalShippingAmount = 0;
-
-        for (CartGoods goods : goodsList) {
-            int buyCount = goods.getBuyCount();
-            Goods goodsInfo = goods.getGoods();
-            int goodsPrice = goodsInfo.getPrice();
-            int shippingPrice = goodsInfo.getShipping().getPrice();
-            totalGoodsAmount += buyCount * goodsPrice;
-            totalShippingAmount += shippingPrice;
-
-        }
-
-        return getPurchaseInfoDto(totalGoodsAmount, totalShippingAmount);
-    }
-
-    public PurchaseInfoDto getCheckGoodsPurchaseInfo(List<CartGoodsDto> cartGoodsDtoList) {
+    public PurchaseInfoDto getGoodsPurchaseInfo(List<CartGoodsDto> cartGoodsDtoList) {
         int totalGoodsAmount = getTotalGoodsAmount(cartGoodsDtoList);
         int totalShippingAmount = getTotalShippingAmount(cartGoodsDtoList);
 
@@ -138,9 +134,9 @@ public class CartService {
     }
 
     private int plusMinPriceIsBundle(int totalShippingAmount, List<Shipping> prepayShippings) {
-        Shipping shipping = getMinPriceByBundle(prepayShippings);
-        if (shipping != null) {
-            totalShippingAmount += shipping.getPrice();
+        Optional<Shipping> minPriceByBundle = getMinPriceByBundle(prepayShippings);
+        if (minPriceByBundle.isPresent()) {
+            totalShippingAmount += minPriceByBundle.get().getPrice();
         }
         return totalShippingAmount;
     }
@@ -154,11 +150,10 @@ public class CartService {
         return totalShippingAmount;
     }
 
-    private Shipping getMinPriceByBundle(List<Shipping> prepayShippings) {
+    private Optional<Shipping> getMinPriceByBundle(List<Shipping> prepayShippings) {
         return prepayShippings.stream()
                               .min(Comparator.comparing(Shipping::getPrice))
-                              .filter(Shipping::isCanBundle)
-                              .orElseGet(null);
+                              .filter(Shipping::isCanBundle);
     }
 
     private List<Shipping> findPrepayShippings(List<CartGoodsDto> cartGoodsList) {

@@ -87,7 +87,7 @@ public class CartController {
             throw new IllegalArgumentException();
         }
 
-        PurchaseInfoDto purchaseInfo = cartService.getCheckGoodsPurchaseInfo(cartGoodsDtoList);
+        PurchaseInfoDto purchaseInfo = cartService.getGoodsPurchaseInfo(cartGoodsDtoList);
         response.setData(purchaseInfo);
         return ResponseEntity.ok(response);
     }
